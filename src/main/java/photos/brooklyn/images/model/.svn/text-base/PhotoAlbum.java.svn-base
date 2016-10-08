@@ -1,0 +1,25 @@
+package photos.brooklyn.images.model;
+
+import java.util.List;
+
+public class PhotoAlbum {
+    private Album albumData;
+    private List<Photo> photos;
+    public Album getAlbumData() {
+        return albumData;
+    }
+    public void setAlbumData(Album albumData) {
+        this.albumData = albumData;
+    }
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
+    public PhotoAlbum() {}
+    public PhotoAlbum(Album albumData, List<Photo> photos) {
+        this.albumData = albumData;
+        this.photos = photos;
+    }
+}

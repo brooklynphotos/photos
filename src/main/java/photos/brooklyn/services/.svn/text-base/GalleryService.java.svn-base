@@ -1,0 +1,10 @@
+package photos.brooklyn.services;
+
+import java.util.List;
+
+import photos.brooklyn.images.model.PhotoAlbum;
+
+public interface GalleryService {
+    List<PhotoAlbum> getPhotoAlbumsForGallery(String gallery, int imageSize);
+
+}

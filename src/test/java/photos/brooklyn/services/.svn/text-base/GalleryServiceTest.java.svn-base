@@ -1,0 +1,38 @@
+package photos.brooklyn.services;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import photos.brooklyn.images.model.PhotoAlbum;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations= {
+        "/spring-test.xml"
+})
+public class GalleryServiceTest {
+    @Autowired
+    private GalleryService svc;
+    @Autowired
+    private CacheManager cacheMan;
+
+    @Test 
+    public void testGalleryPhotoList() throws Exception{
+        int imageSize = 912;
+        List<PhotoAlbum> albums = svc.getPhotoAlbumsForGallery("yeshi", imageSize);
+//        Cache c = cacheMan.getCache("photos");
+//        List<?> ks = ((net.sf.ehcache.Cache)c.getNativeCache()).getKeys();
+//        assertTrue(ks.size()>0);
+        List<PhotoAlbum> albumsCached = svc.getPhotoAlbumsForGallery("yeshi", imageSize);
+        assertEquals(9,albums.size());
+        assertEquals(9,albumsCached.size());
+    }
+
+}

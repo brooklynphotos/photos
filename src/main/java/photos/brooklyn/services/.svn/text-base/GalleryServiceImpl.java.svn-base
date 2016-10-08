@@ -1,0 +1,47 @@
+package photos.brooklyn.services;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import photos.brooklyn.images.model.AlbumAccess;
+import photos.brooklyn.images.model.GalleryAccessData;
+import photos.brooklyn.images.model.PhotoAlbum;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class GalleryServiceImpl implements GalleryService {
+    @Value("${galleryAccess.url}")
+    private String galleryAccessUrl;
+
+    @Autowired
+    private AlbumService albumSvc;
+
+    @Override
+    public List<PhotoAlbum> getPhotoAlbumsForGallery(String gallery,int imageSize) {
+        ObjectMapper mapper = new ObjectMapper();
+        GalleryAccessData d;
+        try {
+            d = mapper.readValue(new URL(galleryAccessUrl), GalleryAccessData.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read from or parse "+galleryAccessUrl,e);
+        }
+        final List<AlbumAccess> accesses = d.getAccessMap().get(gallery);
+        if(CollectionUtils.isEmpty(accesses))
+            throw new IllegalArgumentException("Gallery doesn't exist: "+gallery);
+        List<PhotoAlbum> as = new ArrayList<>();
+        for(AlbumAccess aa: accesses) {
+            as.add(albumSvc.getPhotoAlbum(aa.getId(), imageSize, aa.getAuthKey()));
+        }
+        return as;
+    }
+
+
+}
